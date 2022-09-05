@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { uiState } from '../store/ui.state'
 
 const user = ref({
-  name: 'John Snow',
+  name: 'Ryan Moore',
   // eslint-disable-next-line prettier/prettier
   profileImage: 'https://images.unsplash.com/photo-1660314176057-d01f4ec7d4ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYxOTcxNjY3&ixlib=rb-1.2.1&q=80&w=400'
 })
@@ -18,10 +19,10 @@ const user = ref({
           Thullo
         </span>
       </a>
-      <!-- Board name -->
-      <div class="flex space-x-4 items-center">
+      <!-- Board title -->
+      <div v-if="uiState.isBoardOpen" class="flex space-x-4 items-center">
         <span class="font-poppins font-medium text-md">
-          DevChallenges Board
+          {{ uiState.openBoardTitle }}
         </span>
         <div class="bg-gray-200 h-8 w-0.5 rounded-lg my-2"></div>
         <button
