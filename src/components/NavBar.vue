@@ -13,12 +13,12 @@ const user = ref({
   <nav class="bg-white px-2 py-2.5 shadow-sm">
     <div class="container mx-auto flex items-center justify-between py-1">
       <!-- Logo -->
-      <a href="#" class="flex space-x-3 max-w-sm">
+      <router-link to="/" class="flex space-x-3 max-w-sm">
         <img class="" src="../assets/Logo-small.svg" />
         <span class="font-poppins font-semibold self-center text-xl">
           Thullo
         </span>
-      </a>
+      </router-link>
       <!-- Board title -->
       <div v-if="uiState.isBoardOpen" class="flex space-x-4 items-center">
         <span class="font-poppins font-medium text-md">
