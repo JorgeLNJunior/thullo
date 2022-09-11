@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Home from '../pages/HomePage.vue'
 
-const routes: RouteRecordRaw[] = [{ path: '/', component: Home }]
+const routes: RouteRecordRaw[] = [
+  { path: '/', component: () => import('../pages/HomePage.vue') },
+  { path: '/board/:id', component: () => import('../pages/BoardPage.vue') }
+]
 
 export const router = createRouter({
   history: createWebHistory(),

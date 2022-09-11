@@ -9,7 +9,11 @@ module.exports = {
       poppins: ['Poppins'],
       NotoSans: ['Noto Sans']
     },
-    extend: {}
+    extend: {
+      fontSize: {
+        us: '.625rem'
+      }
+    }
   },
   plugins: []
 }

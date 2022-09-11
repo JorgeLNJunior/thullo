@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useHead } from '@vueuse/head'
 import BoardCard from '../components/home/BoardCard.vue'
 import CreateBoardModal from '../components/home/CreateBoardModal.vue'
 import { uiState } from '../store/ui.state'
+
+useHead({ title: 'Home | Thullo' })
 </script>
 
 <template>
