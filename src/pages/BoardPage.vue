@@ -13,14 +13,17 @@ const board = ref({
   title: 'DevChallenges Board',
   members: [
     {
+      name: 'Ryan Moore',
       profileImage:
         'https://images.unsplash.com/photo-1659462083377-761311a525ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYyMDUyMzI2&ixlib=rb-1.2.1&q=80&w=400'
     },
     {
+      name: 'Scott Manley',
       profileImage:
         'https://images.unsplash.com/photo-1660314176057-d01f4ec7d4ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYyMDUyMzY5&ixlib=rb-1.2.1&q=80&w=400'
     },
     {
+      name: 'Neil Armstrong',
       profileImage:
         'https://images.unsplash.com/photo-1660392750311-f50eeaa6c517?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYyMDUyMzkz&ixlib=rb-1.2.1&q=80&w=400'
     }
@@ -46,7 +49,7 @@ onUnmounted(() => (uiState.isBoardOpen = false))
         <BoardMembersMenu :members="board.members" />
       </div>
       <div class="flex">
-        <BoardMenu />
+        <BoardMenu :board="board" :owner-user="board.members[0]" />
       </div>
     </div>
     <div class="flex my-6">

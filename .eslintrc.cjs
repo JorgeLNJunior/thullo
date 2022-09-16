@@ -20,6 +20,7 @@ module.exports = {
   ignorePatterns: ['*.html'],
   rules: {
     'vue/html-indent': 'error',
+    'vue/no-v-html': 'off',
     'prettier/prettier': [
       'error',
       {

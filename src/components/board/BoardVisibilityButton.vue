@@ -3,7 +3,7 @@ import { onClickOutside } from '@vueuse/core'
 import { ref } from 'vue'
 
 const visibilityDropdown = ref(null)
-const isDropdownActive = ref(true)
+const isDropdownActive = ref(false)
 
 onClickOutside(visibilityDropdown, () => {
   isDropdownActive.value = false

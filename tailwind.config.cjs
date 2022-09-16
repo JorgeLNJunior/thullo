@@ -12,8 +12,11 @@ module.exports = {
     extend: {
       fontSize: {
         us: '.625rem'
+      },
+      spacing: {
+        16.5: '68px'
       }
     }
   },
-  plugins: []
+  plugins: [require('@tailwindcss/typography')]
 }
