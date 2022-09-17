@@ -4,10 +4,16 @@ import { ref } from 'vue'
 import ListCard from './card/ListCard.vue'
 
 const isOptionsDropdownActive = ref<boolean>(false)
+const isAddCardActive = ref<boolean>(false)
+
 const optionsDropdown = ref(null)
+const cardTitleInput = ref(null)
 
 onClickOutside(optionsDropdown, () => {
   isOptionsDropdownActive.value = false
+})
+onClickOutside(cardTitleInput, () => {
+  isAddCardActive.value = false
 })
 
 const props = defineProps({
@@ -25,9 +31,11 @@ const props = defineProps({
 <template>
   <div class="bg-transparent space-y-4">
     <div class="flex justify-between items-center w-60">
+      <!-- Title -->
       <span class="font-poppins font-medium text-sm text-slate-800">
         Backlog
       </span>
+      <!-- List Options Menu -->
       <div ref="optionsDropdown" class="relative inline-block">
         <button
           class="flex items-center justify-center"
@@ -62,6 +70,7 @@ const props = defineProps({
         </Transition>
       </div>
     </div>
+    <!-- Card List -->
     <div class="flex flex-col items-center space-y-3">
       <ListCard
         :members="props.members"
@@ -69,6 +78,29 @@ const props = defineProps({
         :cover="props.coverImage"
       />
       <ListCard :members="props.members" title="GitHub Jobs Challenge" />
+    </div>
+    <!-- Add Card Button -->
+    <div class="space-y-2">
+      <div v-if="isAddCardActive" ref="cardTitleInput" class="relative">
+        <input
+          class="w-full block p-2 rounded-lg bg-white border border-slate-200 font-NotoSans font-medium text-sm text-slate-700 placeholder:text-slate-400"
+          placeholder="Enter a title for this card"
+        />
+        <button
+          class="absolute bottom-1.5 right-1 w-12 h-6 bg-green-500 hover:bg-green-600 rounded-lg flex justify-center items-center"
+        >
+          <span class="font-NotoSans font-medium text-us text-white">Save</span>
+        </button>
+      </div>
+      <div
+        class="flex flex-row justify-between items-center p-3 h-8 rounded-lg bg-blue-200 hover:bg-blue-300 select-none cursor-pointer"
+        @click="isAddCardActive = true"
+      >
+        <span class="font-NotoSans font-medium text-xs text-blue-600">
+          Add another card
+        </span>
+        <span class="material-icons text-lg text-blue-600">add</span>
+      </div>
     </div>
   </div>
 </template>
