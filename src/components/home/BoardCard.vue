@@ -24,20 +24,26 @@ const board = ref({
 </script>
 
 <template>
-  <router-link :to="`/board/${board.id}`">
+  <router-link :to="`/board/${board.id}`" draggable="false">
     <div
-      class="flex flex-col gb-white shadow-md rounded-lg space-y-3 p-3 m-5 min-w-fit"
+      class="flex flex-col gb-white shadow-md rounded-lg space-y-3 p-2 mr-5 min-w-fit max-w-fit hover:shadow-lg"
     >
-      <img class="w-56 rounded-lg" :src="board.coverImage" />
-      <span class="font-NotoSans font-medium">{{ board.title }}</span>
-      <div class="flex flex-row items-center flex-wrap">
-        <img
-          v-for="(member, index) in board.members"
-          :key="index"
-          class="w-12 rounded-lg px-2"
-          :src="member.profileImage"
-        />
-        <span class="font-NotoSans font-light text-sm text-gray-500">
+      <img class="w-56 h-32 rounded-xl" :src="board.coverImage" />
+      <span class="font-NotoSans font-medium text-base select-none">
+        {{ board.title }}
+      </span>
+      <div class="flex flex-row items-center justify-between flex-wrap">
+        <div class="flex flex-row items-center space-x-2">
+          <img
+            v-for="(member, index) in board.members"
+            :key="index"
+            class="w-7 rounded-lg"
+            :src="member.profileImage"
+          />
+        </div>
+        <span
+          class="font-NotoSans font-medium text-xs text-gray-500 select-none"
+        >
           +5 others
         </span>
       </div>

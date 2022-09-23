@@ -8,16 +8,18 @@ useHead({ title: 'Home | Thullo' })
 </script>
 
 <template>
-  <div class="container p-10">
-    <div class="flex flex-col space-y-4">
+  <div class="container pt-8 pl-20">
+    <div class="flex flex-col space-y-3 justify-start">
       <div class="flex justify-between">
-        <span class="font-poppins font-medium text-md">All boards</span>
+        <span class="font-poppins font-medium text-lg select-none">
+          All boards
+        </span>
         <button
-          class="flex items-center bg-blue-500 rounded-lg py-2 px-3 space-x-1 hover:bg-blue-600"
+          class="flex items-center w-16 h-8 bg-blue-500 rounded-lg py-2 px-3 space-x-1 hover:bg-blue-600"
           @click="uiState.isModalOpen = true"
         >
-          <span class="material-icons text-white text-base">add</span>
-          <span class="font-poppins font-medium text-sm text-white">Add</span>
+          <span class="material-icons text-white text-sm">add</span>
+          <span class="font-poppins font-medium text-us text-white">Add</span>
         </button>
       </div>
       <div class="flex flex-wrap">
