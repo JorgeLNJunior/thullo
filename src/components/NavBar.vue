@@ -11,7 +11,7 @@ const user = ref({
 
 <template>
   <nav class="bg-white px-2 py-2 shadow-sm">
-    <div class="container mx-auto flex items-center justify-between py-1">
+    <div class="container mx-auto flex items-center justify-between py-1 h-12">
       <!-- Logo -->
       <router-link to="/" class="flex space-x-3 max-w-sm">
         <img src="../assets/Logo-small.svg" />
@@ -21,38 +21,38 @@ const user = ref({
       </router-link>
       <!-- Board title -->
       <div v-if="uiState.isBoardOpen" class="flex space-x-4 items-center">
-        <span class="font-poppins font-medium text-md select-none">
+        <span class="font-poppins font-medium text-lg select-none">
           {{ uiState.openBoardTitle }}
         </span>
         <div class="bg-gray-200 h-6 w-0.5 rounded-lg my-2"></div>
         <button
-          class="bg-gray-300 rounded-lg p-1.5 inline-flex space-x-1 items-center text-gray-500 hover:text-gray-600 hover:bg-gray-400"
+          class="h-8 w-24 bg-gray-300 rounded-lg space-x-1 flex items-center justify-center text-gray-500 hover:text-gray-600 hover:bg-gray-400"
         >
-          <span class="material-icons">apps</span>
-          <span class="font-poppins text-sm">All board</span>
+          <span class="material-icons font-medium text-sm">apps</span>
+          <span class="font-poppins font-medium text-xs">All board</span>
         </button>
       </div>
-      <div class="flex w-2/4 justify-end space-x-5">
+      <div class="flex w-2/4 justify-end items-center space-x-5">
         <!-- Search bar -->
         <div class="relative w-1/2">
           <input
-            class="w-full block p-2 bg-white rounded-md shadow-md text-sm font-poppins font-light outline-none focus:outline-2 focus:outline-blue-500"
+            class="w-full h-8 block p-2 bg-white rounded-lg shadow-md text-sm font-poppins font-medium text-us outline-none focus:outline-2 focus:outline-blue-500"
             type="text"
             placeholder="Keyword..."
           />
           <button
-            class="flex items-center text-white absolute right-0.5 bottom-1.5 bg-blue-500 rounded-lg px-6 py-1.5 hover:bg-blue-600 hover:text-gray-200"
+            class="flex items-center justify-center h-7 w-16 text-white absolute right-0.5 bottom-0.5 bg-blue-500 rounded-lg hover:bg-blue-600 hover:text-gray-200"
           >
-            <span class="text-sm font-poppins">Search</span>
+            <span class="text-us font-medium font-poppins">Search</span>
           </button>
         </div>
         <!-- User dropdown -->
-        <a class="flex items-center space-x-3">
+        <a class="flex items-center space-x-2">
           <img
-            class="h-10 rounded-md outline outline-1 outline-slate-200"
+            class="h-8 w-8 rounded-lg outline outline-1 outline-slate-200"
             :src="user.profileImage"
           />
-          <span class="font-NotoSans font-medium text-sm select-none">
+          <span class="font-NotoSans font-bold text-xs select-none">
             {{ user.name }}
           </span>
           <span class="material-icons cursor-pointer">arrow_drop_down</span>
