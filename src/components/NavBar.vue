@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { uiState } from '../store/ui.state'
+import { User } from '../api/user.service'
+import getLocalStorageObject from '../helpers/getLocalStorageObject'
 
-const user = ref({
-  name: 'Ryan Moore',
-  // eslint-disable-next-line prettier/prettier
-  profileImage: 'https://images.unsplash.com/photo-1660314176057-d01f4ec7d4ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYxOTcxNjY3&ixlib=rb-1.2.1&q=80&w=400'
-})
+const user = getLocalStorageObject<User>('user')
 </script>
 
 <template>
@@ -32,7 +29,7 @@ const user = ref({
           <span class="font-poppins font-medium text-xs">All board</span>
         </button>
       </div>
-      <div class="flex w-2/4 justify-end items-center space-x-5">
+      <div v-if="user" class="flex w-2/4 justify-end items-center space-x-5">
         <!-- Search bar -->
         <div class="relative w-1/2">
           <input
