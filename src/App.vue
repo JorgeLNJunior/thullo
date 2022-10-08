@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import NavBar from './components/NavBar.vue'
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 </script>
 
 <template>
@@ -10,3 +8,15 @@ import NavBar from './components/NavBar.vue'
     <RouterView />
   </div>
 </template>
+
+<style>
+.Vue-Toastification__toast--info {
+  background-color: rgb(59 130 246);
+}
+.Vue-Toastification__toast--success {
+  background-color: rgb(34 197 94);
+}
+.Vue-Toastification__toast--error {
+  background-color: rgb(239 68 68);
+}
+</style>
