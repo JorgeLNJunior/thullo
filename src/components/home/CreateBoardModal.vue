@@ -110,6 +110,7 @@ function closeModal() {
             <div class="flex flex-row space-x-6">
               <!-- Cover Button -->
               <button
+                type="button"
                 class="w-32 h-8 flex items-center justify-center bg-gray-200 rounded-lg space-x-2 hover:bg-gray-300"
               >
                 <span class="material-icons text-gray-500 font-medium text-sm">
@@ -121,7 +122,7 @@ function closeModal() {
               </button>
               <!-- Visibility Button -->
               <button
-                type="submit"
+                type="button"
                 class="w-32 h-8 flex items-center justify-center bg-gray-200 rounded-lg space-x-2 hover:bg-gray-300"
               >
                 <span class="material-icons text-gray-500 font-medium text-sm">
