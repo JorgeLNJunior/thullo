@@ -41,6 +41,7 @@ async function onSubmit() {
       description: 'Add a board description.'
     })
     toast.success('Board criado com sucesso.')
+    uiState.isModalOpen = false
     await router.push({ name: 'Board', params: { id: board.id } })
   } catch (error) {
     toast.error('Ocorreu um erro ao criar o board.')

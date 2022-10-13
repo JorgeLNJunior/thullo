@@ -1,23 +1,10 @@
-<script lang="ts" setup>
-import { computed } from 'vue'
-
-const props = defineProps({
-  color: {
-    type: String,
-    required: false,
-    default: 'white'
-  }
-})
-
-const fillClass = computed(() => `fill-${props.color}`)
-</script>
+<script lang="ts" setup></script>
 
 <template>
   <svg
     role="status"
     aria-hidden="true"
     class="mr-2 w-4 h-4 text-gray-200 animate-spin"
-    :class="fillClass"
     viewBox="0 0 100 101"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
