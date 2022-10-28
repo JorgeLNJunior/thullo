@@ -31,19 +31,25 @@ export const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   if (!to.meta.requiresAuth) return next()
 
-  let decoded: AccessToken
   const access_token = localStorage.getItem('access_token')
   const refresh_token = localStorage.getItem('refresh_token')
 
+  if (refresh_token) {
+    const decoded: AccessToken = decode<AccessToken>(refresh_token)
+
+    const isExpired = Date.now() >= decoded.exp * 1000
+    if (isExpired) return next('/login')
+  }
+
   if (access_token) {
-    decoded = decode<AccessToken>(access_token)
+    const decoded: AccessToken = decode<AccessToken>(access_token)
 
     const isAccessTokenExpired = Date.now() >= decoded.exp * 1000
 
     if (isAccessTokenExpired) {
       if (!refresh_token) return next('/login')
-      const newToken = await new AuthService().refresh(refresh_token)
-      localStorage.setItem('access_token', newToken)
+      const refreshed_token = await new AuthService().refresh(refresh_token)
+      localStorage.setItem('access_token', refreshed_token)
       return next()
     }
     return next()
