@@ -93,6 +93,7 @@ function closeModal() {
                 placeholder="Add board title..."
                 name="title"
               />
+              <!-- Error Message -->
               <div class="flex justify-between">
                 <div v-auto-animate class="flex w-full">
                   <span

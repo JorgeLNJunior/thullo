@@ -1,23 +1,21 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script lang="ts" setup>
 import CardComentIcon from './Icons/CardComentIcon.vue'
 import CardAttachmentsIcon from './Icons/CardAttachmentsIcon.vue'
 import CardLabelIcon from './Icons/CardLabelIcon.vue'
 import CardMembersList from './CardMembersList.vue'
+import { PropType, ref } from 'vue'
+import { Card } from '../../../../api/card.service'
+import { Member } from '../../../../api/member.service'
+
 const props = defineProps({
-  title: {
-    type: String,
+  card: {
+    type: Object as PropType<Card>,
     required: true
-  },
-  members: {
-    type: Array<Record<string, string>>,
-    required: true
-  },
-  // eslint-disable-next-line vue/require-default-prop
-  cover: {
-    type: String,
-    required: false
   }
 })
+
+const members = ref<Member[]>()
 </script>
 
 <template>
@@ -26,15 +24,15 @@ const props = defineProps({
     draggable="true"
   >
     <div class="p-2 space-y-3 w-full">
-      <img
-        v-if="props.cover"
+      <!-- <img
+        v-if="props.card.cover"
         class="w-fit h-32 rounded-md"
         :src="props.cover"
         draggable="false"
-      />
+      /> -->
       <div>
         <span class="font-NotoSans font-normal select-none">
-          {{ props.title }}
+          {{ props.card.title }}
         </span>
       </div>
       <div class="flex flex-row space-x-2">
@@ -42,9 +40,10 @@ const props = defineProps({
         <CardLabelIcon color="blue" name="Technical" />
       </div>
       <div class="flex flex-row justify-between w-full">
-        <CardMembersList
-          :profile-images="props.members.map((m) => m.profileImage)"
-        />
+        <!-- <CardMembersList
+          v-if="members"
+          :profile-images="members.map((m) => m.user.profileImage)"
+        /> -->
         <div class="flex flex-row space-x-3">
           <CardComentIcon :ammout="10" />
           <CardAttachmentsIcon :ammount="3" />

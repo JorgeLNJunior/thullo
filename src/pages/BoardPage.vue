@@ -1,44 +1,89 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onBeforeMount, onUnmounted, ref } from 'vue'
 import { uiState } from '../store/ui.state'
+import { Board, BoardService } from '../api/board.service'
+import { Member } from '../api/member.service'
+
 import BoardMembersMenu from '../components/board/BoardMembersMenu.vue'
 import BoardMenu from '../components/board/BoardMenu.vue'
 import BoardVisibilityButton from '../components/board/BoardVisibilityButton.vue'
-import BoardList from '../components/board/list/BoardList.vue'
+import CardList from '../components/board/list/CardList.vue'
+import EmptyCardList from '../components/board/list/EmptyCardList.vue'
+
 import { useHead } from '@vueuse/head'
+import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
+import { List } from '../api/list.service'
 
-const board = ref({
-  // eslint-disable-next-line prettier/prettier
-  coverImage: 'https://images.unsplash.com/photo-1660461712603-ffa53b3a3303?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYyMDUzMDY4&ixlib=rb-1.2.1&q=80&w=1080',
-  title: 'DevChallenges Board',
-  members: [
-    {
-      name: 'Ryan Moore',
-      profileImage:
-        'https://images.unsplash.com/photo-1659462083377-761311a525ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYyMDUyMzI2&ixlib=rb-1.2.1&q=80&w=400'
-    },
-    {
-      name: 'Scott Manley',
-      profileImage:
-        'https://images.unsplash.com/photo-1660314176057-d01f4ec7d4ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYyMDUyMzY5&ixlib=rb-1.2.1&q=80&w=400'
-    },
-    {
-      name: 'Neil Armstrong',
-      profileImage:
-        'https://images.unsplash.com/photo-1660392750311-f50eeaa6c517?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MXxyYW5kb218fHx8fHx8fHwxNjYyMDUyMzkz&ixlib=rb-1.2.1&q=80&w=400'
+import { Events } from '../events/events.enum'
+import { useEventBus } from '@vueuse/core'
+import { computed } from 'vue'
+
+const boardService = new BoardService()
+const emmiter = useEventBus(Events.RELOAD_BOARD_LISTS)
+
+const route = useRoute()
+const router = useRouter()
+const toast = useToast()
+
+const board = ref<Board>()
+const members = ref<Member[]>()
+const lists = ref<List[]>()
+
+const sortedLists = computed(() => {
+  if (lists.value) {
+    return Array.from(lists.value).sort((a, b) =>
+      a.position > b.position ? 1 : -1
+    )
+  }
+  return null
+})
+
+// Events
+onBeforeMount(async () => {
+  try {
+    const boardId = route.params.id as string
+    if (!boardId) {
+      toast.error('Board não encontrado.')
+      return await router.push('/')
     }
-  ],
-  id: '123'
+    await fetchBoard(boardId)
+    await fetchMembers(boardId)
+    await fetchLists(boardId)
+
+    uiState.isBoardOpen = true
+    uiState.openBoardTitle = board.value?.title || ''
+  } catch (error) {
+    if (error instanceof Error) {
+      toast.error('Ocorreu um erro.')
+    }
+    console.log(error)
+  }
 })
 
-useHead({ title: `${board.value.title} | Thullo` })
-
-onMounted(() => {
-  uiState.isBoardOpen = true
-  uiState.openBoardTitle = board.value.title
+onUnmounted(() => {
+  uiState.isBoardOpen = false
 })
 
-onUnmounted(() => (uiState.isBoardOpen = false))
+emmiter.on(async () => {
+  console.log('TRIGER')
+  await fetchLists(board.value?.id as string)
+})
+
+// Fetch Data
+async function fetchBoard(boardId: string) {
+  board.value = await boardService.findById(boardId)
+}
+
+async function fetchLists(boardId: string) {
+  lists.value = await boardService.lists(boardId)
+}
+
+async function fetchMembers(boardId: string) {
+  members.value = await boardService.members(boardId)
+}
+
+if (board.value) useHead({ title: `${board.value.title} | Thullo` })
 </script>
 
 <template>
@@ -46,14 +91,20 @@ onUnmounted(() => (uiState.isBoardOpen = false))
     <div class="flex flex-row justify-between">
       <div class="flex space-x-3">
         <BoardVisibilityButton />
-        <BoardMembersMenu :members="board.members" />
+        <BoardMembersMenu v-if="members" :members="members" />
       </div>
       <div class="flex">
-        <BoardMenu :board="board" :owner-user="board.members[0]" />
+        <BoardMenu
+          v-if="board && members"
+          :board="board"
+          :owner-user="members[0].user"
+          :members="members"
+        />
       </div>
     </div>
-    <div class="flex my-6">
-      <BoardList :cover-image="board.coverImage" :members="board.members" />
+    <div v-if="lists" class="flex my-6 space-x-6">
+      <CardList v-for="list in sortedLists" :key="list.id" :list="list" />
+      <EmptyCardList />
     </div>
   </div>
 </template>

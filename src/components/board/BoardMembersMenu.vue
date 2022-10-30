@@ -1,7 +1,9 @@
 <script lang="ts" setup>
+import { Member } from '../../api/member.service'
+
 const props = defineProps({
   members: {
-    type: Object,
+    type: Array<Member>,
     required: true
   }
 })
@@ -10,9 +12,9 @@ const props = defineProps({
 <template>
   <div class="flex flex-row space-x-3">
     <img
-      v-for="(member, index) in props.members"
-      :key="index"
-      :src="member.profileImage"
+      v-for="member in props.members"
+      :key="member.userId"
+      :src="member.user.profileImage"
       class="rounded-lg w-8 h-8"
     />
   </div>

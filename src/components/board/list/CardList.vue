@@ -1,8 +1,38 @@
 <script lang="ts" setup>
+import { computed } from 'vue'
 import { onClickOutside } from '@vueuse/core'
-import { ref } from 'vue'
-import ListCard from './card/ListCard.vue'
+import { ref, PropType, onBeforeMount } from 'vue'
+import { Card as CardType } from '../../../api/card.service'
+import { List, ListService } from '../../../api/list.service'
+import Card from './card/Card.vue'
 
+const props = defineProps({
+  list: {
+    type: Object as PropType<List>,
+    required: true
+  }
+})
+
+const cards = ref<CardType[]>()
+
+onBeforeMount(async () => {
+  try {
+    cards.value = await new ListService().cards(props.list.id)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+const sortedCards = computed(() => {
+  if (cards.value) {
+    return Array.from(cards.value).sort((a, b) =>
+      a.position > b.position ? 1 : -1
+    )
+  }
+  return null
+})
+
+// UI
 const isOptionsDropdownActive = ref<boolean>(false)
 const isAddCardActive = ref<boolean>(false)
 
@@ -15,17 +45,6 @@ onClickOutside(optionsDropdown, () => {
 onClickOutside(cardTitleInput, () => {
   isAddCardActive.value = false
 })
-
-const props = defineProps({
-  members: {
-    type: Array<Record<string, string>>,
-    required: true
-  },
-  coverImage: {
-    type: String,
-    required: true
-  }
-})
 </script>
 
 <template>
@@ -33,7 +52,7 @@ const props = defineProps({
     <div class="flex justify-between items-center w-60">
       <!-- Title -->
       <span class="font-poppins font-medium text-sm text-slate-800">
-        Backlog
+        {{ props.list.title }}
       </span>
       <!-- List Options Menu -->
       <div ref="optionsDropdown" class="relative inline-block">
@@ -56,14 +75,14 @@ const props = defineProps({
           >
             <div class="flex w-full hover:bg-slate-50 cursor-pointer py-1.5">
               <span class="font-poppins font-medium text-us text-slate-500">
-                Rename
+                Renomear
               </span>
             </div>
             <div class="flex w-full hover:bg-slate-50 cursor-pointer">
               <span
                 class="font-poppins font-medium text-us text-slate-500 py-1.5"
               >
-                Delete this list
+                Deletar esta lista
               </span>
             </div>
           </div>
@@ -71,13 +90,8 @@ const props = defineProps({
       </div>
     </div>
     <!-- Card List -->
-    <div class="flex flex-col items-center space-y-3">
-      <ListCard
-        :members="props.members"
-        title="GitHub Jobs Challenge"
-        :cover="props.coverImage"
-      />
-      <ListCard :members="props.members" title="GitHub Jobs Challenge" />
+    <div v-if="cards" class="flex flex-col items-center space-y-3">
+      <Card v-for="card in sortedCards" :key="card.id" :card="card" />
     </div>
     <!-- Add Card Button -->
     <div class="space-y-2">
@@ -97,7 +111,7 @@ const props = defineProps({
         @click="isAddCardActive = true"
       >
         <span class="font-NotoSans font-medium text-xs text-blue-600">
-          Add another card
+          Adicionar outro cartão
         </span>
         <span class="material-icons text-lg text-blue-600">add</span>
       </div>

@@ -1,31 +1,28 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { onClickOutside } from '@vueuse/core'
+import { computed, PropType } from 'vue'
+import { onClickOutside, useDateFormat } from '@vueuse/core'
 import { ref } from 'vue'
 import { marked } from 'marked'
+import { Board } from '../../api/board.service'
+import { User } from '../../api/user.service'
+import { Member } from '../../api/member.service'
 
 const props = defineProps({
   board: {
-    type: Object,
+    type: Object as PropType<Board>,
+    required: true
+  },
+  members: {
+    type: Array<Member>,
     required: true
   },
   ownerUser: {
-    type: Object,
+    type: Object as PropType<User>,
     required: true
   }
 })
 
-const description = `
-  ## Dev Challenges.
-
-  A board description.
-
-  #### Items
-
-  - item 1
-  - item 2
-  - item 3
-`
+const createdAt = useDateFormat(Date.now(), 'D MMM YYYY', { locales: 'pt-BR' })
 
 const isModalOpen = ref(false)
 const modal = ref(null)
@@ -37,7 +34,7 @@ function closeModal() {
 }
 
 const descriptionToHtml = computed(() => {
-  return marked.parse(description)
+  return marked.parse(props.board.description)
 })
 </script>
 
@@ -49,7 +46,9 @@ const descriptionToHtml = computed(() => {
     <span class="material-icons text-gray-500 font-medium text-sm">
       more_horiz
     </span>
-    <span class="font-popins font-medium text-gray-500 text-sm">Show Menu</span>
+    <span class="font-popins font-medium text-gray-500 text-sm">
+      Mostrar Menu
+    </span>
   </button>
   <!-- Modal -->
   <Transition
@@ -81,7 +80,7 @@ const descriptionToHtml = computed(() => {
           <div class="flex items-center space-x-1 select-none">
             <span class="material-icons text-sm text-slate-400">person</span>
             <span class="font-poppins font-semibold text-us text-slate-400">
-              Made By
+              Feito por
             </span>
           </div>
           <!-- User Info -->
@@ -95,7 +94,7 @@ const descriptionToHtml = computed(() => {
                 {{ props.ownerUser.name }}
               </span>
               <span class="font-NotoSans font-semibold text-us text-slate-400">
-                on 4 July, 2020
+                Em {{ createdAt }}
               </span>
             </div>
           </div>
@@ -106,7 +105,7 @@ const descriptionToHtml = computed(() => {
                 description
               </span>
               <span class="font-poppins font-semibold text-us text-slate-400">
-                Description
+                Descrição
               </span>
             </div>
             <button
@@ -114,7 +113,7 @@ const descriptionToHtml = computed(() => {
             >
               <span class="material-icons text-sm text-slate-400">edit</span>
               <span class="font-poppins font-semibold text-us text-slate-400">
-                Edit
+                Editar
               </span>
             </button>
           </div>
@@ -130,21 +129,24 @@ const descriptionToHtml = computed(() => {
                 description
               </span>
               <span class="font-poppins font-semibold text-us text-slate-400">
-                Team
+                Time
               </span>
             </div>
             <div
-              v-for="(member, index) in board.members"
-              :key="index"
-              class="flex flex-row justify-between select-none"
+              v-for="member in members"
+              :key="member.userId"
+              class="flex flex-row justify-between items-center select-none"
             >
               <div class="flex flex-row space-x-2">
-                <img class="rounded-lg w-8 h-8" :src="member.profileImage" />
+                <img
+                  class="rounded-lg w-8 h-8"
+                  :src="member.user.profileImage"
+                />
                 <div class="flex items-center">
                   <span
                     class="font-poppins font-semibold text-xs text-slate-800"
                   >
-                    {{ member.name }}
+                    {{ member.user.name }}
                   </span>
                 </div>
               </div>
@@ -152,7 +154,7 @@ const descriptionToHtml = computed(() => {
                 class="w-16 h-6 border border-red-500 rounded-lg hover:bg-red-100 flex items-center justify-center"
               >
                 <span class="font-poppins font-medium text-us text-red-500">
-                  Remove
+                  Remover
                 </span>
               </button>
             </div>

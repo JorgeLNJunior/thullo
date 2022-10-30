@@ -1,4 +1,5 @@
 import { apiClient } from './api'
+import { List } from './list.service'
 import { Member } from './member.service'
 
 export class BoardService {
@@ -9,7 +10,17 @@ export class BoardService {
     return response.data as Board
   }
 
-  async members(boardId: string, query: MemberQuery): Promise<Member[]> {
+  async findById(id: string): Promise<Board> {
+    const response = await this.api.get(`/boards/${id}`)
+    return response.data as Board
+  }
+
+  async lists(boardId: string): Promise<List[]> {
+    const response = await this.api.get(`/boards/${boardId}/lists`)
+    return response.data as List[]
+  }
+
+  async members(boardId: string, query?: MemberQuery): Promise<Member[]> {
     const response = await this.api.get(`/boards/${boardId}/members`, {
       params: query
     })
