@@ -10,7 +10,7 @@ import Toast, { PluginOptions } from 'vue-toastification'
 
 import 'vue-toastification/dist/index.css'
 
-const options: PluginOptions = {}
+const options: PluginOptions = { timeout: 3000 }
 
 const head = createHead()
 
