@@ -66,7 +66,6 @@ onUnmounted(() => {
 })
 
 emmiter.on(async () => {
-  console.log('TRIGER')
   await fetchLists(board.value?.id as string)
 })
 

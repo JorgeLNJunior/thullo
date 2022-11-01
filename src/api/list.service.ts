@@ -13,6 +13,10 @@ export class ListService {
     const response = await this.api.get(`/lists/${listId}/cards`)
     return response.data as Card[]
   }
+
+  async delete(boardId: string, listId: string): Promise<void> {
+    await this.api.delete(`/boards/${boardId}/lists/${listId}`)
+  }
 }
 
 export interface List {

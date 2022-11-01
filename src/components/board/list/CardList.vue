@@ -1,10 +1,15 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside, useEventBus } from '@vueuse/core'
 import { ref, PropType, onBeforeMount } from 'vue'
 import { Card as CardType } from '../../../api/card.service'
 import { List, ListService } from '../../../api/list.service'
 import Card from './card/Card.vue'
+import { useToast } from 'vue-toastification'
+import { Events } from '../../../events/events.enum'
+
+const toast = useToast()
+const emmiter = useEventBus(Events.RELOAD_BOARD_LISTS)
 
 const props = defineProps({
   list: {
@@ -15,6 +20,21 @@ const props = defineProps({
 
 const cards = ref<CardType[]>()
 
+// Methods
+async function remove() {
+  try {
+    isDeleteBtnDisabled.value = true
+    await new ListService().delete(props.list.boardId, props.list.id)
+    emmiter.emit()
+  } catch (error) {
+    toast.error('Ocorreu um erro ao excluir a lista')
+    console.log(error)
+  } finally {
+    isDeleteBtnDisabled.value = false
+  }
+}
+
+// Hooks
 onBeforeMount(async () => {
   try {
     cards.value = await new ListService().cards(props.list.id)
@@ -23,6 +43,7 @@ onBeforeMount(async () => {
   }
 })
 
+// Data
 const sortedCards = computed(() => {
   if (cards.value) {
     return Array.from(cards.value).sort((a, b) =>
@@ -35,6 +56,7 @@ const sortedCards = computed(() => {
 // UI
 const isOptionsDropdownActive = ref<boolean>(false)
 const isAddCardActive = ref<boolean>(false)
+const isDeleteBtnDisabled = ref<boolean>(false)
 
 const optionsDropdown = ref(null)
 const cardTitleInput = ref(null)
@@ -78,13 +100,17 @@ onClickOutside(cardTitleInput, () => {
                 Renomear
               </span>
             </div>
-            <div class="flex w-full hover:bg-slate-50 cursor-pointer">
+            <button
+              :disabled="isDeleteBtnDisabled"
+              class="flex w-full hover:bg-slate-50 cursor-pointer"
+              @click="remove()"
+            >
               <span
                 class="font-poppins font-medium text-us text-slate-500 py-1.5"
               >
-                Deletar esta lista
+                Deletar
               </span>
-            </div>
+            </button>
           </div>
         </Transition>
       </div>
