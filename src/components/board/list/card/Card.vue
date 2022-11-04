@@ -3,10 +3,10 @@
 import CardComentIcon from './Icons/CardComentIcon.vue'
 import CardAttachmentsIcon from './Icons/CardAttachmentsIcon.vue'
 import CardLabelIcon from './Icons/CardLabelIcon.vue'
-import CardMembersList from './CardMembersList.vue'
-import { PropType, ref } from 'vue'
+// import CardMembersList from './CardMembersList.vue'
+import { PropType } from 'vue'
 import { Card } from '../../../../api/card.service'
-import { Member } from '../../../../api/member.service'
+// import { Member } from '../../../../api/member.service'
 
 const props = defineProps({
   card: {
@@ -15,7 +15,7 @@ const props = defineProps({
   }
 })
 
-const members = ref<Member[]>()
+// const members = ref<Member[]>()
 </script>
 
 <template>

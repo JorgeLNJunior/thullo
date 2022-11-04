@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { onClickOutside, useEventBus } from '@vueuse/core'
 import { ref, PropType, onBeforeMount } from 'vue'
 import { Card as CardType } from '../../../api/card.service'
-import { List, ListService } from '../../../api/list.service'
+import { List, ListService, UpdateListData } from '../../../api/list.service'
 import Card from './card/Card.vue'
 import { useToast } from 'vue-toastification'
 import { Events } from '../../../events/events.enum'
@@ -20,6 +20,10 @@ const props = defineProps({
 
 const cards = ref<CardType[]>()
 
+const updateListData = ref<UpdateListData>({
+  title: props.list.title
+})
+
 // Methods
 async function remove() {
   try {
@@ -31,6 +35,21 @@ async function remove() {
     console.log(error)
   } finally {
     isDeleteBtnDisabled.value = false
+  }
+}
+
+async function renameList() {
+  try {
+    await new ListService().update(
+      props.list.boardId,
+      props.list.id,
+      updateListData.value
+    )
+    emmiter.emit()
+    isRenameListActive.value = false
+  } catch (error) {
+    toast.error('Ocorreu um erro ao excluir a lista')
+    console.log(error)
   }
 }
 
@@ -56,10 +75,12 @@ const sortedCards = computed(() => {
 // UI
 const isOptionsDropdownActive = ref<boolean>(false)
 const isAddCardActive = ref<boolean>(false)
+const isRenameListActive = ref<boolean>(false)
 const isDeleteBtnDisabled = ref<boolean>(false)
 
 const optionsDropdown = ref(null)
 const cardTitleInput = ref(null)
+const cardRenameTitleInput = ref(null)
 
 onClickOutside(optionsDropdown, () => {
   isOptionsDropdownActive.value = false
@@ -67,13 +88,30 @@ onClickOutside(optionsDropdown, () => {
 onClickOutside(cardTitleInput, () => {
   isAddCardActive.value = false
 })
+onClickOutside(cardRenameTitleInput, () => {
+  isRenameListActive.value = false
+})
 </script>
 
 <template>
   <div class="bg-transparent space-y-4">
     <div class="flex justify-between items-center w-60">
+      <!-- Rename Title Input -->
+      <input
+        v-if="isRenameListActive"
+        ref="cardRenameTitleInput"
+        v-model="updateListData.title"
+        name="title"
+        class="w-full h-6 p-1.5 block rounded-lg bg-white outline outline-slate-200 font-NotoSans font-medium text-sm text-slate-700 placeholder:text-slate-400"
+        placeholder="Dê um título a esta lista"
+        @keypress.enter="renameList()"
+      />
       <!-- Title -->
-      <span class="font-poppins font-medium text-sm text-slate-800">
+      <span
+        v-else
+        class="font-poppins font-medium text-sm text-slate-800"
+        @click="isRenameListActive = true"
+      >
         {{ props.list.title }}
       </span>
       <!-- List Options Menu -->
@@ -95,7 +133,10 @@ onClickOutside(cardTitleInput, () => {
             v-if="isOptionsDropdownActive"
             class="flex flex-col w-36 absolute left-0 p-2 mt-1 bg-white rounded-xl border-slate-300 border divide-y"
           >
-            <div class="flex w-full hover:bg-slate-50 cursor-pointer py-1.5">
+            <div
+              class="flex w-full hover:bg-slate-50 cursor-pointer py-1.5"
+              @click="isRenameListActive = true"
+            >
               <span class="font-poppins font-medium text-us text-slate-500">
                 Renomear
               </span>

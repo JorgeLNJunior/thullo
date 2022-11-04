@@ -31,7 +31,6 @@ async function onSubmit() {
     const boardId = route.params.id as string
     await new ListService().create(boardId, { title: titleValue.value })
     isAddListActive.value = false
-    toast.success('Lista criada.')
     emmiter.emit()
   } catch (error) {
     toast.error('Ocorreu um erro ao criar a lista.')
