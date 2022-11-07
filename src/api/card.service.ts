@@ -7,3 +7,8 @@ export interface Card {
   createdAt: string
   updatedAt: string
 }
+
+export interface CreateCardData {
+  title: string
+  description?: string
+}

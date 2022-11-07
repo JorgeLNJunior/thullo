@@ -7,6 +7,9 @@ import { List, ListService, UpdateListData } from '../../../api/list.service'
 import Card from './card/Card.vue'
 import { useToast } from 'vue-toastification'
 import { Events } from '../../../events/events.enum'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const toast = useToast()
 const emmiter = useEventBus(Events.RELOAD_BOARD_LISTS)
@@ -23,6 +26,7 @@ const cards = ref<CardType[]>()
 const updateListData = ref<UpdateListData>({
   title: props.list.title
 })
+const cardTitle = ref<string>('')
 
 // Methods
 async function remove() {
@@ -53,13 +57,34 @@ async function renameList() {
   }
 }
 
-// Hooks
-onBeforeMount(async () => {
+async function createCard() {
+  try {
+    await new ListService().createCard(props.list.id, {
+      title: cardTitle.value
+    })
+    await fetchCards()
+
+    isAddCardActive.value = false
+    cardTitle.value = ''
+  } catch (error) {
+    toast.error('Erro ao criar o cartão.')
+    console.log(error)
+  }
+}
+
+async function fetchCards() {
   try {
     cards.value = await new ListService().cards(props.list.id)
   } catch (error) {
+    toast.error('Erro ao carregar os cartões.')
     console.log(error)
+    await router.push('/')
   }
+}
+
+// Hooks
+onBeforeMount(async () => {
+  await fetchCards()
 })
 
 // Data
@@ -164,11 +189,14 @@ onClickOutside(cardRenameTitleInput, () => {
     <div class="space-y-2">
       <div v-if="isAddCardActive" ref="cardTitleInput" class="relative">
         <input
+          v-model="cardTitle"
           class="w-full block p-2 rounded-lg bg-white border border-slate-200 font-NotoSans font-medium text-sm text-slate-700 placeholder:text-slate-400"
-          placeholder="Enter a title for this card"
+          placeholder="Digite um título para este cartão"
+          @keypress.enter="createCard()"
         />
         <button
           class="absolute bottom-1.5 right-1 w-12 h-6 bg-green-500 hover:bg-green-600 rounded-lg flex justify-center items-center"
+          @click="createCard()"
         >
           <span class="font-NotoSans font-medium text-us text-white">Save</span>
         </button>

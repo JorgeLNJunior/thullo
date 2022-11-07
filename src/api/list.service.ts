@@ -1,5 +1,5 @@
 import { apiClient } from './api'
-import { Card } from './card.service'
+import { Card, CreateCardData } from './card.service'
 
 export class ListService {
   private api = apiClient
@@ -12,6 +12,16 @@ export class ListService {
   async create(boardId: string, data: CreateListData): Promise<List> {
     const response = await this.api.post(`/boards/${boardId}/lists`, data)
     return response.data as List
+  }
+
+  /**
+   * Create a new card.
+   * @param listId The id of the list.
+   * @param data The data to create a card.
+   */
+  async createCard(listId: string, data: CreateCardData): Promise<Card> {
+    const response = await this.api.post(`/lists/${listId}/cards`, data)
+    return response.data as Card
   }
 
   /**
